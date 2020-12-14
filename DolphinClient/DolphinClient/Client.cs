@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
@@ -27,55 +28,50 @@ namespace DolphinClient
         }
 
 
-        public static void Run()
+        public static void Disconnect()
         {
+            client?.Close();
+            stream?.Close();
+        }
+        public static string SendCommand(string str)
+        {
+            byte[] data = new byte[1000000];
+            client = new TcpClient();
             try
             {
-                client = new TcpClient();
                 while (!client.Connected)
                 {
                     client.Connect(server, port);
                 }
                 stream = client.GetStream();
-                while (client.Connected)
+
+                byte[] sendBuffer = Encoding.UTF8.GetBytes(str);
+                stream.Write(sendBuffer, 0, sendBuffer.Length);
+                if (str == "screen")
                 {
-                    byte[] data = new byte[1024];
-                    StringBuilder response = new StringBuilder();
-                    if (stream.DataAvailable)
+                    stream.Read(data, 0, data.Length);
+
+                    using (var ms = new MemoryStream(data))
                     {
-                        int bytes = stream.Read(data, 0, data.Length);
-                        Buffer = (Encoding.UTF8.GetString(data, 0, bytes));
-                        Console.WriteLine("\n" + Buffer);
+                        var bitmap = new Bitmap(ms);
+                        bitmap.Save("test.png", ImageFormat.Png);
+
                     }
 
+                    Disconnect();
+                    Process.Start(new ProcessStartInfo("test.png"));
+                    return "\n<screenshot saved>";
                 }
 
+                int bytes = stream.Read(data, 0, data.Length);
+                Buffer = (Encoding.UTF8.GetString(data, 0, bytes));
+                Disconnect();
+                return "\n" + Buffer;
             }
-            catch (Exception e)
+            catch (SocketException e)
             {
-                Console.WriteLine(e);
-                throw;
-            }
-        }
-
-
-        public static void Disconnect()
-        {
-            client.Close();
-            stream.Close();
-        }
-        public static void SendCommand(string str)
-        {
-            byte[] data = Encoding.UTF8.GetBytes(str);
-            stream.Write(data, 0, data.Length);
-            if (str == "screen")
-            {
-                data = new byte[1000000];
-                stream.Read(data, 0, data.Length);
-
-                using var ms = new MemoryStream(data);
-                var bitmap = new Bitmap(ms);
-                bitmap.Save("test.png", ImageFormat.Png);
+                Disconnect();
+                return e.Message;
             }
         }
     }
