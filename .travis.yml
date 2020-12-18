@@ -1,2 +1,7 @@
 language: csharp
 solution: Dolphin.sln
+
+matrix:
+  include:
+    - dist: bionic
+    - dist: xenial
