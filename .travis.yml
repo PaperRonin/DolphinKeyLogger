@@ -1,5 +1,8 @@
 language: csharp
-mono: none
-dotnet: 3.1
-script:
- - dotnet restore
+solution: Dolphin.sln
+
+jobs:
+  include:
+    - dotnet: 3.1
+      mono: none
+    - mono: latest
