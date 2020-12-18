@@ -1,0 +1,5 @@
+C:\Users\Миша\source\repos\Dolphin\Dolphin\bin\Release\netcoreapp3.1\publish\Dolphin.exe
+C:\Users\Миша\source\repos\Dolphin\Dolphin\bin\Release\netcoreapp3.1\publish\Dolphin.dll
+C:\Users\Миша\source\repos\Dolphin\Dolphin\bin\Release\netcoreapp3.1\publish\Dolphin.deps.json
+C:\Users\Миша\source\repos\Dolphin\Dolphin\bin\Release\netcoreapp3.1\publish\Dolphin.runtimeconfig.json
+C:\Users\Миша\source\repos\Dolphin\Dolphin\bin\Release\netcoreapp3.1\publish\Dolphin.pdb

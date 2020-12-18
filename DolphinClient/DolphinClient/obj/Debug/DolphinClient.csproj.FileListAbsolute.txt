@@ -30,3 +30,5 @@ C:\Users\Миша\Desktop\DolphinClient\DolphinClient\obj\Debug\DolphinClient.cs
 C:\Users\Миша\Desktop\DolphinClient\DolphinClient\obj\Debug\DolphinClient.csproj.CopyComplete
 C:\Users\Миша\Desktop\DolphinClient\DolphinClient\obj\Debug\DolphinClient.exe
 C:\Users\Миша\Desktop\DolphinClient\DolphinClient\obj\Debug\DolphinClient.pdb
+C:\Users\Миша\source\repos\Dolphin\DolphinClient\DolphinClient\bin\Debug\System.Drawing.Common.dll
+C:\Users\Миша\source\repos\Dolphin\DolphinClient\DolphinClient\obj\Debug\DolphinClient.csproj.CopyComplete
