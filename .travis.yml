@@ -3,6 +3,8 @@ language: csharp
 solution: Dolphin.sln
 
 mono: none
-dotnet: 3.1
-script:
- - dotnet restore
+dotnet: 3.1.202
+before_script:
+  - dotnet restore
+install:
+  -dotnet restore
